@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PW_Museo/PW_Museo.Client/PW_Museo.Client.csproj" />
+  <Project Path="PW_Museo/PW_Museo/PW_Museo.csproj" />
+</Solution>
