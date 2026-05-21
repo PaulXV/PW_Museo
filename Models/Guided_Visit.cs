@@ -1,6 +1,6 @@
 ﻿namespace Models;
 
-public class Reservation
+public class Guided_Visit
 {
     public required Guid Id { get; set; }
     public required DateTime Date { get; set; }

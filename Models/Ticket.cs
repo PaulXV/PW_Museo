@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Models;
 
-namespace Models;
-
-public class User
+public class Ticket
 {
     public required Guid Id { get; set; }
     public required string Type { get; set; } = string.Empty;
