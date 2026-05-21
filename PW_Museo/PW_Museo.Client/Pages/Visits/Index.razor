@@ -1,0 +1,56 @@
+@page "/visits"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Visits</PageTitle>
+
+<h1>Visits</h1>
+
+<p>
+    <a href="/visits/create">Create New</a>
+</p>
+
+@if (visits == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Date & Time</th>
+                <th>Duration (mins)</th>
+                <th>Max Participants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var visit in visits)
+            {
+                <tr>
+                    <td>@visit.Title</td>
+                    <td>@visit.Description</td>
+                    <td>@visit.DateTime.ToString("g")</td>
+                    <td>@visit.Duration</td>
+                    <td>@visit.MaxParticipants</td>
+                    <td>
+                        <a href="/visits/edit/@visit.Id">Edit</a> |
+                        <a href="/visits/details/@visit.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Visit[]? visits;
+
+    protected override async Task OnInitializedAsync()
+    {
+        visits = await Http.GetFromJsonAsync<Visit[]>("api/visits");
+    }
+}

@@ -1,0 +1,56 @@
+@page "/operas"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Operas</PageTitle>
+
+<h1>Operas</h1>
+
+<p>
+    <a href="/operas/create">Create New</a>
+</p>
+
+@if (operas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Technic</th>
+                <th>Typology</th>
+                <th>Creation Year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var opera in operas)
+            {
+                <tr>
+                    <td>@opera.Title</td>
+                    <td>@opera.Description</td>
+                    <td>@opera.Techinic</td>
+                    <td>@opera.Typology</td>
+                    <td>@opera.creationYear.ToShortDateString()</td>
+                    <td>
+                        <a href="/operas/edit/@opera.Id">Edit</a> |
+                        <a href="/operas/details/@opera.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Opera[]? operas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operas = await Http.GetFromJsonAsync<Opera[]>("api/operas");
+    }
+}

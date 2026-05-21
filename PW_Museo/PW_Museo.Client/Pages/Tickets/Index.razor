@@ -1,0 +1,53 @@
+@page "/tickets"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Tickets</PageTitle>
+
+<h1>Tickets</h1>
+
+<p>
+    <a href="/tickets/create">Purchase New Ticket</a>
+</p>
+
+@if (tickets == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Purchase Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in tickets)
+            {
+                <tr>
+                    <td>@ticket.Type</td>
+                    <td>@ticket.Quantity</td>
+                    <td>$@ticket.TotalPrice</td>
+                    <td>@ticket.PurchaseDate.ToString("g")</td>
+                    <td>
+                        <a href="/tickets/details/@ticket.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Ticket[]? tickets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tickets = await Http.GetFromJsonAsync<Ticket[]>("api/tickets");
+    }
+}
