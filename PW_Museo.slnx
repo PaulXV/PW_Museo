@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Models/Models.csproj" Id="a511b859-fc14-4071-bf06-495cb37b59a2" />
   <Project Path="PW_Museo/PW_Museo.Client/PW_Museo.Client.csproj" />
   <Project Path="PW_Museo/PW_Museo/PW_Museo.csproj" />
 </Solution>
