@@ -23,7 +23,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 builder.Services.AddAuthorization();
 
-var connectionString = builder.Configuration.GetConnectionString("db") ?? throw new InvalidOperationException("Connection string 'db' not found.");
+var connectionString = builder.Configuration["ConnectionString:db"] ?? throw new InvalidOperationException("Connection string 'db' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -39,7 +39,23 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+builder.Services.AddScoped<PW_Museo.Repositories.ShowsRepository>();
+builder.Services.AddScoped<PW_Museo.Repositories.OperasRepository>();
+builder.Services.AddScoped<PW_Museo.Repositories.VisitsRepository>();
+builder.Services.AddScoped<PW_Museo.Repositories.TicketsRepository>();
+builder.Services.AddScoped<PW_Museo.Repositories.GuidedVisitsRepository>();
+
+builder.Services.AddControllers();
+builder.Services.AddScoped(sp =>
+{
+    var navigationManager = sp.GetRequiredService<Microsoft.AspNetCore.Components.NavigationManager>();
+    return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };
+});
+
+// Optional: add Swagger, but we'll stick to minimum requirements for mapping endpoints.
 var app = builder.Build();
+
+app.MapControllers();
 app.UseSwaggerUI();
 
 if (app.Environment.IsDevelopment())

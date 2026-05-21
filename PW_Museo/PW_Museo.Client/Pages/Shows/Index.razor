@@ -1,0 +1,57 @@
+@page "/shows"
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Shows</PageTitle>
+
+<h1>Shows</h1>
+
+<p>
+    <a href="/shows/create">Create New</a>
+</p>
+
+@if (shows == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var show in shows)
+            {
+                <tr>
+                    <td>@show.Title</td>
+                    <td>@show.Description</td>
+                    <td>@show.StartDate.ToShortDateString()</td>
+                    <td>@show.EndDate.ToShortDateString()</td>
+                    <td>@show.Status</td>
+                    <td>
+                        <a href="/shows/edit/@show.Id">Edit</a> |
+                        <a href="/shows/details/@show.Id">Details</a> |
+                        <a href="/shows/delete/@show.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Show[]? shows;
+
+    protected override async Task OnInitializedAsync()
+    {
+        shows = await Http.GetFromJsonAsync<Show[]>("api/shows");
+    }
+}
