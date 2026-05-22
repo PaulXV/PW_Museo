@@ -1,0 +1,53 @@
+@page "/tickets/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Create Ticket</PageTitle>
+
+<h1>Create Ticket</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="ticket" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Purchase Date</label>
+                <InputDate id="date" class="form-control" @bind-Value="ticket.PurchaseDate" />
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Total Price</label>
+                <InputNumber id="price" class="form-control" @bind-Value="ticket.TotalPrice" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/tickets">Back to List</a>
+</div>
+
+@code {
+    private Ticket ticket = new Ticket() 
+    { 
+        Id = Guid.NewGuid(),
+        Type = "",
+        Quantity = 1,
+        TotalPrice = 0,
+        PurchaseDate = DateTime.Now,
+        PersonId = Guid.Empty,
+        ShowId = Guid.Empty,
+        VisitId = Guid.Empty
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/tickets", ticket);
+        Navigation.NavigateTo("/tickets");
+    }
+}

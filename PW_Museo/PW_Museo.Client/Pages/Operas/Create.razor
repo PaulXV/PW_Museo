@@ -1,0 +1,66 @@
+@page "/operas/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Create Opera</PageTitle>
+
+<h1>Create Opera</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="opera" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <InputText id="title" class="form-control" @bind-Value="opera.Title" />
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <InputText id="description" class="form-control" @bind-Value="opera.Description" />
+            </div>
+            <div class="mb-3">
+                <label for="technic" class="form-label">Technic</label>
+                <InputText id="technic" class="form-control" @bind-Value="opera.Techinic" />
+            </div>
+            <div class="mb-3">
+                <label for="typology" class="form-label">Typology</label>
+                <InputText id="typology" class="form-control" @bind-Value="opera.Typology" />
+            </div>
+            <div class="mb-3">
+                <label for="creationYear" class="form-label">Creation Year</label>
+                <InputDate id="creationYear" class="form-control" @bind-Value="opera.creationYear" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/operas">Back to List</a>
+</div>
+
+@code {
+    private Opera opera = new Opera() 
+    { 
+        Id = Guid.NewGuid(),
+        Title = "",
+        Description = "",
+        creationYear = DateTime.Now,
+        Techinic = "",
+        Typology = "",
+        ShowId = Guid.Empty,
+        ImageId = Guid.Empty,
+        AuthorId = Guid.Empty
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/operas", opera);
+        Navigation.NavigateTo("/operas");
+    }
+}

@@ -4,6 +4,7 @@ using PW_Museo.Client.Pages;
 using PW_Museo.Components;
 using PW_Museo.Components.Account;
 using PW_Museo.Data;
+using PW_Museo.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +46,6 @@ builder.Services.AddScoped<PW_Museo.Repositories.VisitsRepository>();
 builder.Services.AddScoped<PW_Museo.Repositories.TicketsRepository>();
 builder.Services.AddScoped<PW_Museo.Repositories.GuidedVisitsRepository>();
 
-builder.Services.AddControllers();
 builder.Services.AddScoped(sp =>
 {
     var navigationManager = sp.GetRequiredService<Microsoft.AspNetCore.Components.NavigationManager>();
@@ -55,7 +55,12 @@ builder.Services.AddScoped(sp =>
 // Optional: add Swagger, but we'll stick to minimum requirements for mapping endpoints.
 var app = builder.Build();
 
-app.MapControllers();
+app.MapOperasEndpoints();
+app.MapShowsEndpoints();
+app.MapGuidedVisitsEndpoints();
+app.MapTicketsEndpoints();
+app.MapVisitsEndpoints();
+
 app.UseSwaggerUI();
 
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,58 @@
+@page "/visits/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Create Visit</PageTitle>
+
+<h1>Create Visit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="visit" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <InputDate id="date" class="form-control" @bind-Value="visit.DateTime" />
+            </div>
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration (mins)</label>
+                <InputNumber id="duration" class="form-control" @bind-Value="visit.Duration" />
+            </div>
+            <div class="mb-3">
+                <label for="maxParticipants" class="form-label">Max Participants</label>
+                <InputNumber id="maxParticipants" class="form-control" @bind-Value="visit.MaxParticipants" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/visits">Back to List</a>
+</div>
+
+@code {
+    private Visit visit = new Visit() 
+    { 
+        Id = Guid.NewGuid(),
+        Title = "",
+        Description = "",
+        DateTime = DateTime.Now,
+        Duration = 60,
+        MaxParticipants = 20,
+        ShowId = Guid.Empty,
+        GuideId = Guid.Empty,
+        AuthorId = Guid.Empty
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/visits", visit);
+        Navigation.NavigateTo("/visits");
+    }
+}

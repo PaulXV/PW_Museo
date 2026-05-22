@@ -39,7 +39,7 @@ else
                     <td>
                         <a href="/shows/edit/@show.Id">Edit</a> |
                         <a href="/shows/details/@show.Id">Details</a> |
-                        <a href="/shows/delete/@show.Id">Delete</a>
+                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteShow(show.Id)">Delete</button>
                     </td>
                 </tr>
             }
@@ -52,6 +52,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        shows = await Http.GetFromJsonAsync<Show[]>("api/shows");
+    }
+
+    private async Task DeleteShow(Guid id)
+    {
+        await Http.DeleteAsync($"api/shows/{id}");
         shows = await Http.GetFromJsonAsync<Show[]>("api/shows");
     }
 }

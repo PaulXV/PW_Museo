@@ -1,0 +1,49 @@
+@page "/guidedvisits/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Create Guided Visit</PageTitle>
+
+<h1>Create Guided Visit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="guidedVisit" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <InputDate id="date" class="form-control" @bind-Value="guidedVisit.Date" />
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <InputCheckbox id="status" class="form-check-input" @bind-Value="guidedVisit.Status" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/guidedvisits">Back to List</a>
+</div>
+
+@code {
+    private Guided_Visit guidedVisit = new Guided_Visit() 
+    { 
+        Id = Guid.NewGuid(),
+        Date = DateTime.Now,
+        PersonId = Guid.Empty,
+        VisitId = Guid.Empty
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/guidedvisits", guidedVisit);
+        Navigation.NavigateTo("/guidedvisits");
+    }
+}

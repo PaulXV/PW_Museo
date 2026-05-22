@@ -1,0 +1,58 @@
+@page "/guidedvisits/edit/{id:guid}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Edit Guided Visit</PageTitle>
+
+<h1>Edit Guided Visit</h1>
+
+<hr />
+@if (guidedVisit == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="guidedVisit" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <InputDate id="date" class="form-control" @bind-Value="guidedVisit.Date" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <InputCheckbox id="status" class="form-check-input" @bind-Value="guidedVisit.Status" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/guidedvisits">Back to List</a>
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private Guided_Visit? guidedVisit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        guidedVisit = await Http.GetFromJsonAsync<Guided_Visit>($"api/guidedvisits/{Id}");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PutAsJsonAsync($"api/guidedvisits/{Id}", guidedVisit);
+        Navigation.NavigateTo("/guidedvisits");
+    }
+}

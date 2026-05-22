@@ -38,7 +38,7 @@ else
                     <td>@opera.creationYear.ToShortDateString()</td>
                     <td>
                         <a href="/operas/edit/@opera.Id">Edit</a> |
-                        <a href="/operas/details/@opera.Id">Details</a>
+                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteOpera(opera.Id)">Delete</button>
                     </td>
                 </tr>
             }
@@ -51,6 +51,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        operas = await Http.GetFromJsonAsync<Opera[]>("api/operas");
+    }
+
+    private async Task DeleteOpera(Guid id)
+    {
+        await Http.DeleteAsync($"api/operas/{id}");
         operas = await Http.GetFromJsonAsync<Opera[]>("api/operas");
     }
 }

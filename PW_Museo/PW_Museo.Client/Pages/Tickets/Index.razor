@@ -35,7 +35,8 @@ else
                     <td>$@ticket.TotalPrice</td>
                     <td>@ticket.PurchaseDate.ToString("g")</td>
                     <td>
-                        <a href="/tickets/details/@ticket.Id">Details</a>
+                        <a href="/tickets/edit/@ticket.Id">Edit</a> |
+                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
                     </td>
                 </tr>
             }
@@ -48,6 +49,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        tickets = await Http.GetFromJsonAsync<Ticket[]>("api/tickets");
+    }
+
+    private async Task DeleteTicket(Guid id)
+    {
+        await Http.DeleteAsync($"api/tickets/{id}");
         tickets = await Http.GetFromJsonAsync<Ticket[]>("api/tickets");
     }
 }

@@ -38,7 +38,7 @@ else
                     <td>@visit.MaxParticipants</td>
                     <td>
                         <a href="/visits/edit/@visit.Id">Edit</a> |
-                        <a href="/visits/details/@visit.Id">Details</a>
+                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteVisit(visit.Id)">Delete</button>
                     </td>
                 </tr>
             }
@@ -51,6 +51,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        visits = await Http.GetFromJsonAsync<Visit[]>("api/visits");
+    }
+
+    private async Task DeleteVisit(Guid id)
+    {
+        await Http.DeleteAsync($"api/visits/{id}");
         visits = await Http.GetFromJsonAsync<Visit[]>("api/visits");
     }
 }
