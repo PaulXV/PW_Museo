@@ -1,6 +1,7 @@
 @page "/visits/edit/{id:guid}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using PW_Museo.Client.Services.Visits;
 @using Models
 
 <PageTitle>Edit Visit</PageTitle>
@@ -44,15 +45,16 @@ else
     public Guid Id { get; set; }
 
     private Visit? visit;
+    private VisitService visitSRV = new VisitService();
 
     protected override async Task OnInitializedAsync()
     {
-        visit = await Http.GetFromJsonAsync<Visit>($"api/visits/{Id}");
+        visit = await visitSRV.GetVisitById(Id);
     }
 
     private async Task HandleValidSubmit()
     {
-        await Http.PutAsJsonAsync($"api/visits/{Id}", visit);
+        await visitSRV.UpdateVisit(visit!);
         Navigation.NavigateTo("/visits");
     }
 }

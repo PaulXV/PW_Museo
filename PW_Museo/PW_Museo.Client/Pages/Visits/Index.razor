@@ -1,5 +1,6 @@
 @page "/visits"
 @inject HttpClient Http
+@using PW_Museo.Client.Services.Visits;
 @using Models
 
 <PageTitle>Visits</PageTitle>
@@ -48,15 +49,16 @@ else
 
 @code {
     private Visit[]? visits;
+    private VisitService visitSRV = new VisitService();
 
     protected override async Task OnInitializedAsync()
     {
-        visits = await Http.GetFromJsonAsync<Visit[]>("api/visits");
+        visits = await visitSRV.GetAllVisits();
     }
 
     private async Task DeleteVisit(Guid id)
     {
-        await Http.DeleteAsync($"api/visits/{id}");
-        visits = await Http.GetFromJsonAsync<Visit[]>("api/visits");
+        await visitSRV.DeleteVisit(id);
+        visits = await visitSRV.GetAllVisits();
     }
 }
