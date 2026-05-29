@@ -45,6 +45,7 @@ builder.Services.AddScoped<IOperasDA, OperasDA>();
 builder.Services.AddScoped<ITicketsDA, TicketsDA>();
 builder.Services.AddScoped<IShowsDA, ShowsDA>();
 builder.Services.AddScoped<IVisitsDA, VisitsDA>();
+builder.Services.AddScoped<IArtistsDA, ArtistsDA>();
 
 builder.Services.AddScoped(sp =>
 {
@@ -60,6 +61,7 @@ app.MapShowsEndpoints();
 app.MapGuidedVisitsEndpoints();
 app.MapTicketsEndpoints();
 app.MapVisitsEndpoints();
+app.MapArtistsEndpoints();
 
 app.UseSwaggerUI();
 

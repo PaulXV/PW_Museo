@@ -9,5 +9,7 @@ namespace PW_Museo.Services
         Task<IEnumerable<Opera>> GetAllAsync();
         Task<Opera> GetByIdAsync(Guid id);
         Task UpdateAsync(Opera opera);
+        Task<IEnumerable<Opera>> GetAllDetailAsync();
+
     }
 }

@@ -1,0 +1,57 @@
+﻿@page "/artists/create"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Models
+
+<PageTitle>Create Artist</PageTitle>
+
+<h1>Create Artist</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="artist" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText id="name" class="form-control" @bind-Value="artist.Name" />
+            </div>
+            <div class="mb-3">
+                <label for="surname" class="form-label">Surname</label>
+                <InputText id="surname" class="form-control" @bind-Value="artist.Surname" />
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <InputText id="email" class="form-control" @bind-Value="artist.EmailAddress" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/artists">Back to List</a>
+</div>
+
+@code {
+    private Artist artist = new Artist()
+    {
+        Id = Guid.NewGuid(),
+        Name = "",
+        Surname = "",
+        EmailAddress = "",
+        IsAdmin = false,
+        OperaId = Guid.Empty
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/artists", artist);
+        Navigation.NavigateTo("/artists");
+    }
+}
