@@ -10,10 +10,13 @@
 <PageTitle>Operas</PageTitle>
 
 <h1>Operas</h1>
-
-<p>
-    <a href="/operas/create">Create New</a>
-</p>
+<AuthorizeView>
+    <Authorized>
+        <p>
+            <a href="/operas/create">Create New</a>
+        </p>
+    </Authorized>
+</AuthorizeView>
 
 @if (operas == null)
 {
@@ -30,7 +33,11 @@ else
                 <th>Typology</th>
                 <th>Creation Year</th>
                 <th>Author</th>
-                <th>Actions</th>
+                <AuthorizeView>
+                    <Authorized>
+                        <th>Actions</th>
+                    </Authorized>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -43,10 +50,16 @@ else
                     <td>@opera.Typology</td>
                     <td>@opera.creationYear.ToShortDateString()</td>
                     <td>@GetAuthorName(opera.AuthorId)</td>
-                    <td>
-                        <a href="/operas/edit/@opera.Id">Edit</a> |
-                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteOpera(opera.Id)">Delete</button>
-                    </td>
+                    
+                    <AuthorizeView>
+                        <Authorized>
+                            <td>
+                                <a href="/operas/edit/@opera.Id">Edit</a> |
+                                <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteOpera(opera.Id)">Delete</button>
+                            </td>
+                        </Authorized>
+                    </AuthorizeView>
+                        
                 </tr>
             }
         </tbody>
