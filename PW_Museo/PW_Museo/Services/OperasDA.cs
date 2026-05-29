@@ -80,19 +80,21 @@ public class OperasDA : IOperasDA
         var sql = "DELETE FROM Operas WHERE Id = @Id";
         await connection.ExecuteAsync(sql, new { Id = id });
     }
-
     public async Task<IEnumerable<Opera>> GetAllDetailAsync()
     {
         using var connection = new SqlConnection(_connectionString);
         var sql = """
-            SELECT 
-                o.Id, o.Title, o.Description, o.creationYear, o.Techinic, o.Typology,
-                o.ShowId, s.Title AS ShowTitle,
-                a.Name AS AuthorName, a.Surname AS AuthorSurname
-            FROM Operas o
-            LEFT JOIN Artists a ON o.AuthorId = a.Id
-            LEFT JOIN Shows s ON o.ShowId = s.Id
-            """;
+        SELECT 
+            o.Id, o.Title, o.Description, o.creationYear, o.Techinic, o.Typology,
+            o.ShowId, o.ImageId, o.AuthorId,
+            s.Title AS ShowTitle,
+            a.Name AS AuthorName, a.Surname AS AuthorSurname,
+            i.Src AS ImageSrc
+        FROM Operas o
+        LEFT JOIN Artists a ON o.AuthorId = a.Id
+        LEFT JOIN Shows s ON o.ShowId = s.Id
+        LEFT JOIN Images i ON o.ImageId = i.Id
+        """;
         return await connection.QueryAsync<Opera>(sql);
     }
 }

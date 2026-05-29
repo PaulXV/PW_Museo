@@ -27,12 +27,14 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Technic</th>
                 <th>Typology</th>
                 <th>Creation Year</th>
                 <th>Author</th>
+                <th>Show</th>
                 <AuthorizeView>
                     <Authorized>
                         <th>Actions</th>
@@ -44,13 +46,26 @@ else
             @foreach (var opera in operas)
             {
                 <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(opera.ImageSrc))
+                        {
+                            <img src="@opera.ImageSrc"
+                                 alt="@opera.Title"
+                                 style="height:60px; width:60px; object-fit:cover; border-radius:4px; cursor:pointer;"
+                                 @onclick="() => OpenModal(opera.ImageSrc, opera.Title)" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </td>
                     <td>@opera.Title</td>
                     <td>@opera.Description</td>
                     <td>@opera.Techinic</td>
                     <td>@opera.Typology</td>
                     <td>@opera.creationYear.ToShortDateString()</td>
-                    <td>@GetAuthorName(opera.AuthorId)</td>
-                    
+                    <td>@($"{opera.AuthorName} {opera.AuthorSurname}")</td>
+                    <td>@(opera.ShowTitle ?? "—")</td>
                     <AuthorizeView>
                         <Authorized>
                             <td>
@@ -59,16 +74,36 @@ else
                             </td>
                         </Authorized>
                     </AuthorizeView>
-                        
                 </tr>
             }
         </tbody>
     </table>
 }
 
+@if (modalVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.6);">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@modalTitle</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="@modalSrc" alt="@modalTitle" style="max-width:100%; max-height:70vh; object-fit:contain;" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private IEnumerable<Opera>? operas;
     private Artist[]? artists;
+
+    private bool modalVisible = false;
+    private string? modalSrc;
+    private string? modalTitle;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,6 +120,20 @@ else
     private async Task DeleteOpera(Guid id)
     {
         await operaSRV.DeleteOpera(id);
-        operas = await operaSRV.GetAllOperas();
+        operas = await operaSRV.GetAllOperasWithDetails();
+    }
+
+    private void OpenModal(string src, string title)
+    {
+        modalSrc = src;
+        modalTitle = title;
+        modalVisible = true;
+    }
+
+    private void CloseModal()
+    {
+        modalVisible = false;
+        modalSrc = null;
+        modalTitle = null;
     }
 }

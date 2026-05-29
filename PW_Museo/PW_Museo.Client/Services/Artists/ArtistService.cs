@@ -16,13 +16,11 @@ public class ArtistService : IArtistService
     {
         try
         {
-            var response = await Http.GetAsync("api/operas");
-            response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<Artist[]>().Result ?? [];
+            return await Http.GetFromJsonAsync<Artist[]>("api/artists") ?? [];
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Error fetching artits: {ex.Message}");
+            Console.WriteLine($"Error fetching artists: {ex.Message}");
             return [];
         }
     }

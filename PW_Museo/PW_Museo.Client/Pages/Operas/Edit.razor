@@ -7,6 +7,7 @@
 @using PW_Museo.Client.Services.Shows;
 @inject IArtistService artistSRV
 @using PW_Museo.Client.Services.Artists;
+@inject HttpClient Http
 @inject NavigationManager Navigation
 @using Models
 
@@ -67,6 +68,20 @@ else
                         }
                     </InputSelect>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Image</label>
+                    @if (!string.IsNullOrEmpty(previewUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@previewUrl" alt="preview" style="max-height:200px; max-width:100%; object-fit:contain;" />
+                        </div>
+                    }
+                    <InputFile OnChange="HandleImageUpload" accept="image/*" class="form-control" />
+                    @if (uploading)
+                    {
+                        <small class="text-muted">Uploading...</small>
+                    }
+                </div>
 
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
@@ -85,12 +100,35 @@ else
     private Opera? opera;
     private Artist[] artists = [];
     private Show[] shows = [];
+    private string? previewUrl;
+    private bool uploading = false;
 
     protected override async Task OnInitializedAsync()
     {
         opera = await operaSRV.GetOperaById(Id);
         artists = await artistSRV.GetAllArtists() ?? [];
         shows = await showSRV.GetAllShows() ?? [];
+        previewUrl = opera?.ImageSrc;
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploading = true;
+        var file = e.File;
+        using var content = new MultipartFormDataContent();
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+        content.Add(new StreamContent(stream), "file", file.Name);
+        var response = await Http.PostAsync("api/images/upload", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+            if (result is not null)
+            {
+                opera!.ImageId = result.Id;
+                previewUrl = result.Url;
+            }
+        }
+        uploading = false;
     }
 
     private async Task HandleValidSubmit()
@@ -98,4 +136,6 @@ else
         await operaSRV.UpdateOpera(opera!);
         Navigation.NavigateTo("/operas");
     }
+
+    private record UploadResult(Guid Id, string Url);
 }

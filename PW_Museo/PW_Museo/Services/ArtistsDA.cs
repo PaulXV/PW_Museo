@@ -78,4 +78,21 @@ public class ArtistsDA : IArtistsDA
             """;
         await connection.ExecuteAsync(query, new { Id = id });
     }
+    public async Task<IEnumerable<Artist>> GetAllWithOperaAsync()
+    {
+        using var connection = new SqlConnection(_connectionString);
+        string query = """
+            SELECT
+                a.[Id],
+                a.[Name],
+                a.[Surname],
+                a.[EmailAddress],
+                a.[IsAdmin],
+                a.[OperaId],
+                o.[Title] AS OperaTitle
+            FROM Artists a
+            LEFT JOIN Operas o ON a.OperaId = o.Id
+        """;
+        return await connection.QueryAsync<Artist>(query);
+    }
 }
