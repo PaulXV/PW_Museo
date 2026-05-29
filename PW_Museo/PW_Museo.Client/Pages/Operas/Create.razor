@@ -1,7 +1,10 @@
 @page "/operas/create"
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
-@inject HttpClient Http
+@inject IOperaService operaSRV
+@using PW_Museo.Client.Services.Operas;
+@inject IArtistService artistSRV
+@using PW_Museo.Client.Services.Artists;
 @inject NavigationManager Navigation
 @using Models
 
@@ -74,12 +77,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists") ?? [];
+        artists = await artistSRV.GetAllArtists() ?? [];
     }
 
     private async Task HandleValidSubmit()
     {
-        await Http.PostAsJsonAsync("api/operas", opera);
+        await operaSRV.CreateOpera(opera);
         Navigation.NavigateTo("/operas");
     }
 }

@@ -1,5 +1,6 @@
-@page "/tickets"
-@inject HttpClient Http
+﻿@page "/tickets"
+@inject ITicketService ticketSRV
+@using PW_Museo.Client.Services.Tickets;
 @using Models
 
 <PageTitle>Tickets</PageTitle>
@@ -49,12 +50,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        tickets = await Http.GetFromJsonAsync<Ticket[]>("api/tickets");
+        tickets = await ticketSRV.GetAllTickets();
     }
 
     private async Task DeleteTicket(Guid id)
     {
-        await Http.DeleteAsync($"api/tickets/{id}");
-        tickets = await Http.GetFromJsonAsync<Ticket[]>("api/tickets");
+        await ticketSRV.DeleteTicket(id);
+        tickets = await ticketSRV.GetAllTickets();
     }
 }

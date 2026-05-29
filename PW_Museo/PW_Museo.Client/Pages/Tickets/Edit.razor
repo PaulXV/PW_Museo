@@ -1,5 +1,6 @@
 @page "/tickets/edit/{id:guid}"
-@inject HttpClient Http
+@inject ITicketService ticketSRV
+@using PW_Museo.Client.Services.Tickets;
 @inject NavigationManager Navigation
 @using Models
 
@@ -47,12 +48,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ticket = await Http.GetFromJsonAsync<Ticket>($"api/tickets/{Id}");
+        ticket = await ticketSRV.GetTicketById(Id);
     }
 
     private async Task HandleValidSubmit()
     {
-        await Http.PutAsJsonAsync($"api/tickets/{Id}", ticket);
+        await ticketSRV.UpdateTicket(ticket!);
         Navigation.NavigateTo("/tickets");
     }
 }

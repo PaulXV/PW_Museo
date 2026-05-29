@@ -1,5 +1,6 @@
 @page "/tickets/create"
-@inject HttpClient Http
+@inject ITicketService ticketSRV
+@using PW_Museo.Client.Services.Tickets;
 @inject NavigationManager Navigation
 @using Models
 
@@ -47,7 +48,7 @@
 
     private async Task HandleValidSubmit()
     {
-        await Http.PostAsJsonAsync("api/tickets", ticket);
+        await ticketSRV.CreateTicket(ticket!);
         Navigation.NavigateTo("/tickets");
     }
 }

@@ -22,7 +22,7 @@ public class OperaService : IOperaService
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Error fetching tickets: {ex.Message}");
+            Console.WriteLine($"Error fetching operas: {ex.Message}");
             return [];
         }
     }

@@ -1,5 +1,6 @@
 @page "/shows/edit/{id:guid}"
-@inject HttpClient Http
+@inject IShowService showSRV
+@using PW_Museo.Client.Services.Shows;
 @inject NavigationManager NavigationManager
 @using Models
 
@@ -59,12 +60,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        show = await Http.GetFromJsonAsync<Show>($"api/shows/{Id}");
+        show = await showSRV.GetShowById(Id);
     }
 
     private async Task HandleValidSubmit()
     {
-        await Http.PutAsJsonAsync($"api/shows/{Id}", show);
+        await showSRV.UpdateShow(show!);
         NavigationManager.NavigateTo("/shows");
     }
 }

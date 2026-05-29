@@ -1,7 +1,12 @@
 @page "/operas/edit/{id:guid}"
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
-@inject HttpClient Http
+@inject IOperaService operaSRV
+@using PW_Museo.Client.Services.Operas;
+@inject IShowService showSRV
+@using PW_Museo.Client.Services.Shows;
+@inject IArtistService artistSRV
+@using PW_Museo.Client.Services.Artists;
 @inject NavigationManager Navigation
 @using Models
 
@@ -83,14 +88,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        opera = await Http.GetFromJsonAsync<Opera>($"api/operas/{Id}");
-        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists") ?? [];
-        shows = await Http.GetFromJsonAsync<Show[]>("api/shows") ?? [];
+        opera = await operaSRV.GetOperaById(Id);
+        artists = await artistSRV.GetAllArtists() ?? [];
+        shows = await showSRV.GetAllShows() ?? [];
     }
 
     private async Task HandleValidSubmit()
     {
-        await Http.PutAsJsonAsync($"api/operas/{Id}", opera);
+        await operaSRV.UpdateOpera(opera!);
         Navigation.NavigateTo("/operas");
     }
 }

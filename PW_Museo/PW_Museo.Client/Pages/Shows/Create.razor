@@ -1,5 +1,6 @@
 @page "/shows/create"
-@inject HttpClient Http
+@inject IShowService showSRV
+@using PW_Museo.Client.Services.Shows;
 @inject NavigationManager NavigationManager
 @using Models
 
@@ -58,7 +59,7 @@
 
     private async Task HandleValidSubmit()
     {
-        await Http.PostAsJsonAsync("api/shows", show);
+        await showSRV.CreateShow(show);
         NavigationManager.NavigateTo("/shows");
     }
 }

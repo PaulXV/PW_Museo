@@ -1,5 +1,6 @@
 @page "/shows"
-@inject HttpClient Http
+@inject IShowService showSRV
+@using PW_Museo.Client.Services.Shows;
 @using Models
 
 <PageTitle>Shows</PageTitle>
@@ -52,12 +53,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        shows = await Http.GetFromJsonAsync<Show[]>("api/shows");
+        shows = await showSRV.GetAllShows();
     }
 
     private async Task DeleteShow(Guid id)
     {
-        await Http.DeleteAsync($"api/shows/{id}");
-        shows = await Http.GetFromJsonAsync<Show[]>("api/shows");
+        await showSRV.DeleteShow(id);
+        shows = await showSRV.GetAllShows();
     }
 }

@@ -1,7 +1,10 @@
 @page "/operas"
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
-@inject HttpClient Http
+@inject IOperaService operaSRV
+@using PW_Museo.Client.Services.Operas;
+@inject IArtistService artistSRV
+@using PW_Museo.Client.Services.Artists;
 @using Models
 
 <PageTitle>Operas</PageTitle>
@@ -56,8 +59,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        operas = await Http.GetFromJsonAsync<Opera[]>("api/operas");
-        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists");
+        operas = await operaSRV.GetAllOperas();
+        artists = await artistSRV.GetAllArtists();
     }
 
     private string GetAuthorName(Guid authorId)
@@ -68,7 +71,7 @@ else
 
     private async Task DeleteOpera(Guid id)
     {
-        await Http.DeleteAsync($"api/operas/{id}");
-        operas = await Http.GetFromJsonAsync<Opera[]>("api/operas");
+        await operaSRV.DeleteOpera(id);
+        operas = await operaSRV.GetAllOperas();
     }
 }
