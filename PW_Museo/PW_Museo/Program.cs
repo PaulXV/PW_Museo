@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PW_Museo.Client.Pages;
 using PW_Museo.Components;
 using PW_Museo.Components.Account;
 using PW_Museo.Data;
 using PW_Museo.Endpoints;
+using PW_Museo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,11 +40,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddScoped<PW_Museo.Repositories.ShowsRepository>();
-builder.Services.AddScoped<PW_Museo.Repositories.OperasRepository>();
-builder.Services.AddScoped<PW_Museo.Repositories.VisitsRepository>();
-builder.Services.AddScoped<PW_Museo.Repositories.TicketsRepository>();
-builder.Services.AddScoped<PW_Museo.Repositories.GuidedVisitsRepository>();
+builder.Services.AddScoped<IGuidedVisitsDA, GuidedVisitsDA>();
+builder.Services.AddScoped<IOperasDA, OperasDA>();
+builder.Services.AddScoped<ITicketsDA, TicketsDA>();
+builder.Services.AddScoped<IShowsDA, ShowsDA>();
+builder.Services.AddScoped<IVisitsDA, VisitsDA>();
 
 builder.Services.AddScoped(sp =>
 {
