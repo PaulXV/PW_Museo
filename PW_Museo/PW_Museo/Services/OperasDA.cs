@@ -1,6 +1,5 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Models;
 
 namespace PW_Museo.Services;
@@ -17,26 +16,61 @@ public class OperasDA : IOperasDA
     public async Task<IEnumerable<Opera>> GetAllAsync()
     {
         using var connection = new SqlConnection(_connectionString);
-        return await connection.QueryAsync<Opera>("SELECT * FROM Operas");
+        string query = """
+                SELECT
+                    [Id],
+                    [Title],
+                    [Description],
+                    [CreationYear],
+                    [Techinic],
+                    [Typology],
+                    [ShowId],
+                    [ImageId],
+                    [AuthorId]
+                FROM Operas
+            """;
+        return await connection.QueryAsync<Opera>(query);
     }
 
-    public async Task<Opera> GetByIdAsync(Guid id)
+    public async Task<Opera?> GetByIdAsync(Guid id)
     {
         using var connection = new SqlConnection(_connectionString);
-        return await connection.QueryFirstOrDefaultAsync<Opera>("SELECT * FROM Operas WHERE Id = @Id", new { Id = id });
+        string query = """
+                SELECT
+                    [Id],
+                    [Title],
+                    [Description],
+                    [CreationYear],
+                    [Techinic],
+                    [Typology],
+                    [ShowId],
+                    [ImageId],
+                    [AuthorId]
+                FROM Operas
+                WHERE Id = @Id
+            """;
+        return await connection.QueryFirstOrDefaultAsync<Opera>(query, new { Id = id });
+        ;
     }
 
     public async Task CreateAsync(Opera opera)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sql = "INSERT INTO Operas (Id, Title, Description, creationYear, Techinic, Typology, ShowId, ImageId, AuthorId) VALUES (@Id, @Title, @Description, @creationYear, @Techinic, @Typology, @ShowId, @ImageId, @AuthorId)";
+        var sql = """
+                INSERT INTO Operas (Id, Title, Description, creationYear, Techinic, Typology, ShowId, ImageId, AuthorId)
+                VALUES (@Id, @Title, @Description, @creationYear, @Techinic, @Typology, @ShowId, @ImageId, @AuthorId)
+            """;
         await connection.ExecuteAsync(sql, opera);
     }
 
     public async Task UpdateAsync(Opera opera)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sql = "UPDATE Operas SET Title = @Title, Description = @Description, creationYear = @creationYear, Techinic = @Techinic, Typology = @Typology, ShowId = @ShowId, ImageId = @ImageId, AuthorId = @AuthorId WHERE Id = @Id";
+        var sql = """
+                UPDATE Operas
+                SET Title = @Title, Description = @Description, creationYear = @creationYear, Techinic = @Techinic, Typology = @Typology, ShowId = @ShowId, ImageId = @ImageId, AuthorId = @AuthorId
+                WHERE Id = @Id
+            """;
         await connection.ExecuteAsync(sql, opera);
     }
 

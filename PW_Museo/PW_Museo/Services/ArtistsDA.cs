@@ -11,38 +11,71 @@ public class ArtistsDA : IArtistsDA
 
     public ArtistsDA(IConfiguration configuration)
     {
-        _connectionString = configuration["ConnectionString:db"] ?? throw new InvalidOperationException("Connection string 'db' not found.");
+        _connectionString = configuration["ConnectionString:db"]
+            ?? throw new InvalidOperationException("Connection string 'db' not found.");
     }
 
     public async Task<IEnumerable<Artist>> GetAllAsync()
     {
         using var connection = new SqlConnection(_connectionString);
-        return await connection.QueryAsync<Artist>("SELECT * FROM Artists");
+        string query = """
+                SELECT
+                    [Id],
+                    [Name],
+                    [Surname],
+                    [EmailAddress],
+                    [IsAdmin],
+                    [OperaId]
+                FROM Artists
+            """;
+        return await connection.QueryAsync<Artist>(query);
     }
 
     public async Task<Artist?> GetByIdAsync(Guid id)
     {
         using var connection = new SqlConnection(_connectionString);
-        return await connection.QueryFirstOrDefaultAsync<Artist>("SELECT * FROM Artists WHERE Id = @Id", new { Id = id });
+        string query = """
+                SELECT
+                    [Id],
+                    [Name],
+                    [Surname],
+                    [EmailAddress],
+                    [IsAdmin],
+                    [OperaId]
+                FROM Artists
+                WHERE Id = @Id
+            """;
+        return await connection.QueryFirstOrDefaultAsync<Artist>(query, new { Id = id });
     }
 
     public async Task CreateAsync(Artist artist)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sql = "INSERT INTO Artists (Id, Name, Surname, EmailAddress, IsAdmin, OperaId) VALUES (@Id, @Name, @Surname, @EmailAddress, @IsAdmin, @OperaId)";
+        var sql = """
+                INSERT INTO Artists (Id, Name, Surname, EmailAddress, IsAdmin, OperaId)
+                VALUES (@Id, @Name, @Surname, @EmailAddress, @IsAdmin, @OperaId)
+            """;
         await connection.ExecuteAsync(sql, artist);
     }
 
     public async Task UpdateAsync(Artist artist)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sql = "UPDATE Artists SET Name = @Name, Surname = @Surname, EmailAddress = @EmailAddress, IsAdmin = @IsAdmin, OperaId = @OperaId WHERE Id = @Id";
+        var sql = """
+                UPDATE Artists
+                SET Name = @Name, Surname = @Surname, EmailAddress = @EmailAddress, IsAdmin = @IsAdmin, OperaId = @OperaId
+                WHERE Id = @Id
+            """;
         await connection.ExecuteAsync(sql, artist);
     }
 
     public async Task DeleteAsync(Guid id)
     {
         using var connection = new SqlConnection(_connectionString);
-        await connection.ExecuteAsync("DELETE FROM Artists WHERE Id = @Id", new { Id = id });
+        string query = """
+                DELETE FROM Artists
+                WHERE Id = @Id
+            """;
+        await connection.ExecuteAsync(query, new { Id = id });
     }
 }
