@@ -1,6 +1,7 @@
 @page "/visits/create"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using PW_Museo.Client.Services.Visits;
 @using Models
 
 <PageTitle>Create Visit</PageTitle>
@@ -37,6 +38,9 @@
 </div>
 
 @code {
+
+    private VisitService visitSRV = new VisitService();
+
     private Visit visit = new Visit() 
     { 
         Id = Guid.NewGuid(),
@@ -52,7 +56,7 @@
 
     private async Task HandleValidSubmit()
     {
-        await Http.PostAsJsonAsync("api/visits", visit);
+        await visitSRV.CreateVisit(visit);
         Navigation.NavigateTo("/visits");
     }
 }
