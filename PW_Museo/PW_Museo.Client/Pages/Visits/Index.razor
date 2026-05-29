@@ -7,9 +7,14 @@
 
 <h1>Visits</h1>
 
-<p>
-    <a href="/visits/create">Create New</a>
-</p>
+<AuthorizeView>
+    <Authorized>
+        <p>
+            <a href="/visits/create">Create New</a>
+        </p>
+    </Authorized>
+</AuthorizeView>
+
 
 @if (visits == null)
 {
@@ -25,7 +30,11 @@ else
                 <th>Date & Time</th>
                 <th>Duration (mins)</th>
                 <th>Max Participants</th>
-                <th>Actions</th>
+                <AuthorizeView>
+                    <Authorized>
+                        <th>Actions</th>
+                    </Authorized>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -37,10 +46,14 @@ else
                     <td>@visit.DateTime.ToString("g")</td>
                     <td>@visit.Duration</td>
                     <td>@visit.MaxParticipants</td>
-                    <td>
-                        <a href="/visits/edit/@visit.Id">Edit</a> |
-                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteVisit(visit.Id)">Delete</button>
-                    </td>
+                    <AuthorizeView>
+                        <Authorized>
+                            <td>
+                                <a href="/visits/edit/@visit.Id">Edit</a> |
+                                <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteVisit(visit.Id)">Delete</button>
+                            </td>
+                        </Authorized>
+                    </AuthorizeView>
                 </tr>
             }
         </tbody>

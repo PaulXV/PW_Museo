@@ -24,7 +24,11 @@ else
                 <th>Quantity</th>
                 <th>Total Price</th>
                 <th>Purchase Date</th>
-                <th>Actions</th>
+                <AuthorizeView>
+                    <Authorized>
+                        <th>Actions</th>
+                    </Authorized>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -35,10 +39,14 @@ else
                     <td>@ticket.Quantity</td>
                     <td>$@ticket.TotalPrice</td>
                     <td>@ticket.PurchaseDate.ToString("g")</td>
-                    <td>
-                        <a href="/tickets/edit/@ticket.Id">Edit</a> |
-                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
-                    </td>
+                    <AuthorizeView>
+                        <Authorized>
+                            <td>
+                                <a href="/tickets/edit/@ticket.Id">Edit</a> |
+                                <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
+                            </td>
+                        </Authorized>
+                    </AuthorizeView>
                 </tr>
             }
         </tbody>

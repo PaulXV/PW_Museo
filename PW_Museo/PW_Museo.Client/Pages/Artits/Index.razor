@@ -8,9 +8,13 @@
 
 <h1>Artists</h1>
 
-<p>
-    <a href="/artists/create">Create New</a>
-</p>
+<AuthorizeView>
+    <Authorized>
+        <p>
+            <a href="/artists/create">Create New</a>
+        </p>
+    </Authorized>
+</AuthorizeView>
 
 @if (artists == null)
 {
@@ -24,7 +28,11 @@ else
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
-                <th>Actions</th>
+                <AuthorizeView>
+                    <Authorized>
+                        <th>Actions</th>
+                    </Authorized>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -34,10 +42,14 @@ else
                     <td>@artist.Name</td>
                     <td>@artist.Surname</td>
                     <td>@artist.EmailAddress</td>
-                    <td>
-                        <a href="/artists/edit/@artist.Id">Edit</a> |
-                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteArtist(artist.Id)">Delete</button>
-                    </td>
+                    <AuthorizeView>
+                        <Authorized>
+                            <td>
+                                <a href="/artists/edit/@artist.Id">Edit</a> |
+                                <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteArtist(artist.Id)">Delete</button>
+                            </td>
+                        </Authorized>
+                    </AuthorizeView>
                 </tr>
             }
         </tbody>
