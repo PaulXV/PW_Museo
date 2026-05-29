@@ -5,7 +5,12 @@ namespace PW_Museo.Client.Services.Operas;
 
 public class OperaService : IOperaService
 {
-    private readonly HttpClient Http = new();
+    private readonly HttpClient Http;
+
+    public OperaService(HttpClient http)
+    {
+        Http = http;
+    }
 
     public async Task<Opera[]> GetAllOperas()
     {

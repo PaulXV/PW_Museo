@@ -1,5 +1,5 @@
 @page "/visits"
-@inject HttpClient Http
+@inject IVisitService visitSRV
 @using PW_Museo.Client.Services.Visits;
 @using Models
 
@@ -49,7 +49,6 @@ else
 
 @code {
     private Visit[]? visits;
-    private VisitService visitSRV = new VisitService();
 
     protected override async Task OnInitializedAsync()
     {

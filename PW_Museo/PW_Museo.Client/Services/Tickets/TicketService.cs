@@ -5,7 +5,12 @@ namespace PW_Museo.Client.Services.Tickets;
 
 public class TicketService : ITicketService
 {
-    private readonly HttpClient Http = new();
+    private readonly HttpClient Http;
+
+    public TicketService(HttpClient http)
+    {
+        Http = http;
+    }
 
     public async Task<Ticket[]> GetAllTickets()
     {

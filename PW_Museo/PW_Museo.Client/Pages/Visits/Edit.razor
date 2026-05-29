@@ -1,5 +1,5 @@
 @page "/visits/edit/{id:guid}"
-@inject HttpClient Http
+@inject IVisitService visitSRV
 @inject NavigationManager Navigation
 @using PW_Museo.Client.Services.Visits;
 @using Models
@@ -45,7 +45,6 @@ else
     public Guid Id { get; set; }
 
     private Visit? visit;
-    private VisitService visitSRV = new VisitService();
 
     protected override async Task OnInitializedAsync()
     {

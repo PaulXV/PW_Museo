@@ -5,7 +5,12 @@ namespace PW_Museo.Client.Services.Visits;
 
 public class VisitService : IVisitService
 {
-    private readonly HttpClient Http = new();
+    private readonly HttpClient Http;
+
+    public VisitService(HttpClient http)
+    {
+        Http = http;
+    }
 
     public async Task<Visit[]> GetAllVisits()
     {

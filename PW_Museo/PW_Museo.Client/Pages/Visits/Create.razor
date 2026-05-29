@@ -1,5 +1,5 @@
 @page "/visits/create"
-@inject HttpClient Http
+@inject IVisitService visitSRV
 @inject NavigationManager Navigation
 @using PW_Museo.Client.Services.Visits;
 @using Models
@@ -38,8 +38,6 @@
 </div>
 
 @code {
-
-    private VisitService visitSRV = new VisitService();
 
     private Visit visit = new Visit() 
     { 

@@ -5,7 +5,12 @@ namespace PW_Museo.Client.Services.Shows;
 
 public class ShowService : IShowService
 {
-    private readonly HttpClient Http = new();
+    private readonly HttpClient Http;
+
+    public ShowService(HttpClient http)
+    {
+        Http = http;
+    }
 
     public async Task<Show[]> GetAllShows()
     {
