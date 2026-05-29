@@ -51,6 +51,8 @@ builder.Services.AddScoped<ITicketsDA, TicketsDA>();
 builder.Services.AddScoped<IShowsDA, ShowsDA>();
 builder.Services.AddScoped<IVisitsDA, VisitsDA>();
 builder.Services.AddScoped<IArtistsDA, ArtistsDA>();
+builder.Services.AddSingleton<BlobService>();
+builder.Services.AddScoped<IImagesDA, ImagesDA>();
 
 // Client services per il prerendering Blazor WebAssembly Server-Side
 builder.Services.AddScoped<IVisitService, VisitService>();
@@ -74,6 +76,8 @@ app.MapGuidedVisitsEndpoints();
 app.MapTicketsEndpoints();
 app.MapVisitsEndpoints();
 app.MapArtistsEndpoints();
+app.MapImagesEndpoints();
+
 
 app.UseSwaggerUI();
 

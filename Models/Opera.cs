@@ -17,4 +17,6 @@ public class Opera
     public string? ShowTitle { get; set; }
     public string? AuthorName { get; set; }
     public string? AuthorSurname { get; set; }
+    public string? ImageSrc { get; set; }
+
 }

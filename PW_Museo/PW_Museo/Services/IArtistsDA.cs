@@ -9,5 +9,6 @@ namespace PW_Museo.Services
         Task<IEnumerable<Artist>> GetAllAsync();
         Task<Artist?> GetByIdAsync(Guid id);
         Task UpdateAsync(Artist artist);
+        Task<IEnumerable<Artist>> GetAllWithOperaAsync();
     }
 }

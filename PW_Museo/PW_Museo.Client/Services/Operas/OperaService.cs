@@ -31,13 +31,11 @@ public class OperaService : IOperaService
     {
         try
         {
-            var response = await Http.GetAsync("api/operas");
-            response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<Opera[]>().Result ?? [];
+            return await Http.GetFromJsonAsync<Opera[]>("api/operas/all-details") ?? [];
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Error fetching opera: {ex.Message}");
+            Console.WriteLine($"Error fetching operas with details: {ex.Message}");
             return [];
         }
     }

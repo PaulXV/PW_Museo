@@ -2,11 +2,14 @@
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
 @inject IOperaService operaSRV
-@using PW_Museo.Client.Services.Operas;
+@using PW_Museo.Client.Services.Operas
 @inject IArtistService artistSRV
-@using PW_Museo.Client.Services.Artists;
+@using PW_Museo.Client.Services.Artists
+@inject HttpClient Http
 @inject NavigationManager Navigation
 @using Models
+@inject IShowService showSRV
+@using PW_Museo.Client.Services.Shows
 
 <PageTitle>Create Opera</PageTitle>
 
@@ -49,6 +52,30 @@
                     }
                 </InputSelect>
             </div>
+            <div class="mb-3">
+                <label for="show" class="form-label">Show (optional)</label>
+                <InputSelect id="show" class="form-control" @bind-Value="opera.ShowId">
+                    <option value="@Guid.Empty">— No Show —</option>
+                    @foreach (var show in shows)
+                    {
+                        <option value="@show.Id">@show.Title</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                @if (!string.IsNullOrEmpty(previewUrl))
+                {
+                    <div class="mb-2">
+                        <img src="@previewUrl" alt="preview" style="max-height:200px; max-width:100%; object-fit:contain;" />
+                    </div>
+                }
+                <InputFile OnChange="HandleImageUpload" accept="image/*" class="form-control" />
+                @if (uploading)
+                {
+                    <small class="text-muted">Uploading...</small>
+                }
+            </div>
 
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -74,10 +101,34 @@
     };
 
     private Artist[] artists = [];
+    private Show[] shows = [];
+    private string? previewUrl;
+    private bool uploading = false;
 
     protected override async Task OnInitializedAsync()
     {
-        artists = await artistSRV.GetAllArtists() ?? [];
+        artists = await artistSRV.GetAllArtists();
+        shows = await showSRV.GetAllShows();
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploading = true;
+        var file = e.File;
+        using var content = new MultipartFormDataContent();
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+        content.Add(new StreamContent(stream), "file", file.Name);
+        var response = await Http.PostAsync("api/images/upload", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+            if (result is not null)
+            {
+                opera.ImageId = result.Id;
+                previewUrl = result.Url;
+            }
+        }
+        uploading = false;
     }
 
     private async Task HandleValidSubmit()
@@ -85,4 +136,6 @@
         await operaSRV.CreateOpera(opera);
         Navigation.NavigateTo("/operas");
     }
+
+    private record UploadResult(Guid Id, string Url);
 }
