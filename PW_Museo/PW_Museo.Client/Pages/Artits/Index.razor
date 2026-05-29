@@ -1,0 +1,60 @@
+﻿@page "/artists"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient Http
+@using Models
+
+<PageTitle>Artists</PageTitle>
+
+<h1>Artists</h1>
+
+<p>
+    <a href="/artists/create">Create New</a>
+</p>
+
+@if (artists == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var artist in artists)
+            {
+                <tr>
+                    <td>@artist.Name</td>
+                    <td>@artist.Surname</td>
+                    <td>@artist.EmailAddress</td>
+                    <td>
+                        <a href="/artists/edit/@artist.Id">Edit</a> |
+                        <button class="btn btn-link link-danger p-0 align-baseline" @onclick="() => DeleteArtist(artist.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Artist[]? artists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists");
+    }
+
+    private async Task DeleteArtist(Guid id)
+    {
+        await Http.DeleteAsync($"api/artists/{id}");
+        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists");
+    }
+}
