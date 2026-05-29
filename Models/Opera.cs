@@ -13,4 +13,8 @@ public class Opera
     public Guid ShowId { get; set; }
     public required Guid ImageId { get; set; }
     public required Guid AuthorId { get; set; }
+
+    public string? ShowTitle { get; set; }
+    public string? AuthorName { get; set; }
+    public string? AuthorSurname { get; set; }
 }

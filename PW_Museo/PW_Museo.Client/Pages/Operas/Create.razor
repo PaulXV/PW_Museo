@@ -1,4 +1,6 @@
 @page "/operas/create"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @using Models
@@ -34,6 +36,16 @@
                 <label for="creationYear" class="form-label">Creation Year</label>
                 <InputDate id="creationYear" class="form-control" @bind-Value="opera.creationYear" />
             </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Author</label>
+                <InputSelect id="author" class="form-control" @bind-Value="opera.AuthorId">
+                    <option value="@Guid.Empty">— Select Author —</option>
+                    @foreach (var artist in artists)
+                    {
+                        <option value="@artist.Id">@artist.Name @artist.Surname</option>
+                    }
+                </InputSelect>
+            </div>
 
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -45,8 +57,8 @@
 </div>
 
 @code {
-    private Opera opera = new Opera() 
-    { 
+    private Opera opera = new Opera()
+    {
         Id = Guid.NewGuid(),
         Title = "",
         Description = "",
@@ -57,6 +69,13 @@
         ImageId = Guid.Empty,
         AuthorId = Guid.Empty
     };
+
+    private Artist[] artists = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        artists = await Http.GetFromJsonAsync<Artist[]>("api/artists") ?? [];
+    }
 
     private async Task HandleValidSubmit()
     {
