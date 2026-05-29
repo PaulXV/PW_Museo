@@ -13,6 +13,7 @@ public static class OperasEndpoints
         var group = routes.MapGroup("/api/operas");
 
         group.MapGet("/", async (IOperasDA repo) => Results.Ok(await repo.GetAllAsync()));
+        group.MapGet("/all-details", async (IOperasDA repo) => Results.Ok(await repo.GetAllDetailAsync()));
         group.MapGet("/{id:guid}", async (Guid id, IOperasDA repo) =>
         {
             var item = await repo.GetByIdAsync(id);

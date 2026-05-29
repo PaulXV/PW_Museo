@@ -5,6 +5,11 @@ using PW_Museo.Components.Account;
 using PW_Museo.Data;
 using PW_Museo.Endpoints;
 using PW_Museo.Services;
+using PW_Museo.Client.Services.Visits;
+using PW_Museo.Client.Services.Tickets;
+using PW_Museo.Client.Services.Shows;
+using PW_Museo.Client.Services.Operas;
+using PW_Museo.Client.Services.Artists;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +51,13 @@ builder.Services.AddScoped<ITicketsDA, TicketsDA>();
 builder.Services.AddScoped<IShowsDA, ShowsDA>();
 builder.Services.AddScoped<IVisitsDA, VisitsDA>();
 builder.Services.AddScoped<IArtistsDA, ArtistsDA>();
+
+// Client services per il prerendering Blazor WebAssembly Server-Side
+builder.Services.AddScoped<IVisitService, VisitService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IShowService, ShowService>();
+builder.Services.AddScoped<IOperaService, OperaService>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
 
 builder.Services.AddScoped(sp =>
 {

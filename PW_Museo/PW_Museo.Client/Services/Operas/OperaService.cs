@@ -27,6 +27,21 @@ public class OperaService : IOperaService
         }
     }
 
+    public async Task<IEnumerable<Opera>> GetAllOperasWithDetails()
+    {
+        try
+        {
+            var response = await Http.GetAsync("api/operas");
+            response.EnsureSuccessStatusCode();
+            return response.Content.ReadFromJsonAsync<Opera[]>().Result ?? [];
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error fetching opera: {ex.Message}");
+            return [];
+        }
+    }
+
     public async Task<Opera?> GetOperaById(Guid id)
     {
         try

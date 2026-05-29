@@ -9,4 +9,5 @@ public interface IOperaService
     Task<Opera[]> GetAllOperas();
     Task<Opera?> GetOperaById(Guid id);
     Task<bool> UpdateOpera(Opera updatedOpera);
+    Task<IEnumerable<Opera>> GetAllOperasWithDetails();
 }

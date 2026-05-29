@@ -54,12 +54,12 @@ else
 }
 
 @code {
-    private Opera[]? operas;
+    private IEnumerable<Opera>? operas;
     private Artist[]? artists;
 
     protected override async Task OnInitializedAsync()
     {
-        operas = await operaSRV.GetAllOperas();
+        operas = await operaSRV.GetAllOperasWithDetails();
         artists = await artistSRV.GetAllArtists();
     }
 
