@@ -22,9 +22,20 @@ else
                 <ValidationSummary />
 
                 <div class="mb-3">
+                    <label for="type" class="form-label">Type</label>
+                    <InputText id="type" class="form-control" @bind-Value="ticket.Type" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="qty" class="form-label">Quantity</label>
+                    <InputNumber id="qty" class="form-control" @bind-Value="ticket.Quantity" />
+                </div>
+
+                <div class="mb-3">
                     <label for="date" class="form-label">Purchase Date</label>
                     <InputDate id="date" class="form-control" @bind-Value="ticket.PurchaseDate" />
                 </div>
+
                 <div class="mb-3">
                     <label for="price" class="form-label">Total Price</label>
                     <InputNumber id="price" class="form-control" @bind-Value="ticket.TotalPrice" />

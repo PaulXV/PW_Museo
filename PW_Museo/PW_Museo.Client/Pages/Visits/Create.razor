@@ -16,13 +16,25 @@
             <ValidationSummary />
 
             <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <InputText id="title" class="form-control" @bind-Value="visit.Title" />
+            </div>
+            
+            <div class="mb-3">
+                <label for="desc" class="form-label">Description</label>
+                <InputText id="desc" class="form-control" @bind-Value="visit.Description" />
+            </div>
+
+            <div class="mb-3">
                 <label for="date" class="form-label">Date</label>
                 <InputDate id="date" class="form-control" @bind-Value="visit.DateTime" />
             </div>
+
             <div class="mb-3">
                 <label for="duration" class="form-label">Duration (mins)</label>
                 <InputNumber id="duration" class="form-control" @bind-Value="visit.Duration" />
             </div>
+
             <div class="mb-3">
                 <label for="maxParticipants" class="form-label">Max Participants</label>
                 <InputNumber id="maxParticipants" class="form-control" @bind-Value="visit.MaxParticipants" />
